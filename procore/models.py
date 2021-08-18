@@ -1,27 +1,40 @@
 from django.db import models
-from django.conf import settings
+from django.template.defaultfilters import slugify, title 
+from django.contrib.auth.models import User
+from django.urls import reverse
 
 
-CATEGORY_CHOICES = (
-    ('S', 'Shirt'),
-    ('SW', 'Sport wear'),
-    ('OW', 'Outwear')
-)
 
-LABEL_CHOICES = (
-    ('P', 'primary'),
-    ('S', 'secondary'),
-    ('D', 'danger')
-)
+class Post(models.Model):
+    title = models.CharField(max_length=255, null= False)
+    image = models.ImageField(upload_to='site_media')
+    slug = models.SlugField(unique=True, max_length=255)
+    content = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+    author = models.TextField()
+    #vote counter
+    votes_total = models.ManyToManyField(User, related_name="votes")
+    
+    def get_absolute_url(self):
+        return reverse("model_detail", args=[self.slug])
 
-ADDRESS_CHOICES = (
-    ('B', 'Billing'),
-    ('S', 'Shipping'),
-)
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug= slugify(self.title)
+            super(Post, self).save(*args, **kwargs)
 
+    class Meta:
+        verbose_name = "posts"
+        ordering = ['created_on']
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(
-    settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+        def __unicode__(self):
+            return self.title
 
-    )
+class Comment(models.Model):
+    name = models.CharField(max_length=42)
+    email = models.EmailField(max_length=75)
+    website = models.URLField(max_length=200, null=True, blank=True)
+    content = models.TextField(max_length=500)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    created_on = models.DateTimeField(auto_now_add=True)
+

@@ -5,6 +5,6 @@ class UserConfig(AppConfig):
     name = 'userapp'
 
 
-    def read(self):
+    def ready(self):
         from . import signals
         

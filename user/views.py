@@ -8,7 +8,7 @@ def dashboard(request):
     context = {
         "welcome" : "Welcome ArtLover"
     }
-    return render(request, 'user/dashborad.html', context = context)
+    return render(request, 'template/user/dashborad.html', context = context)
 
 def register(request):
     if request.method == 'Post':

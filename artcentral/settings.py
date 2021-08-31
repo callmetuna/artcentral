@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'REST_framework',
+    'firebase_auth',
 ]
 
 MIDDLEWARE = [
@@ -118,3 +120,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'REST_framework.authentication.SessionAuthentication',
+        'firebase_auth.authentication.FirebaseAuthentication',
+    ),
+}

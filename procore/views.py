@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
 from .forms import NewCommentForm, NewPostForm
-from django.views.generic import ListView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post, Comments, Like
 from django.contrib.auth.decorators import login_required
@@ -32,3 +32,13 @@ class PostVoteToggle(RedirectView):
 
 class PostListView(ListView):
     model = [Post]
+    template_name = ''
+
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'post_detail.html'
+
+class PostCreateView(CreateView): # new
+    model = Post
+    template_name = 'post_new.html'
+    fields = ['title', 'author', 'content','image']
